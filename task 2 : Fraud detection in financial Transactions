@@ -1,0 +1,58 @@
+# Import necessary libraries
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score, f1_score, classification_report
+
+# Step 1: Data Collection
+# Load the financial dataset (replace 'your_dataset.csv' with the actual file path)
+dataset = pd.read_csv('your_dataset.csv')
+
+# Step 2: Data Processing
+# Check for missing values
+print("Missing Values:\n", dataset.isnull().sum())
+
+# Step 3: Features Engineering
+# If needed, perform additional feature engineering steps like handling outliers, scaling, etc.
+
+# Step 4: Exploratory Data Analysis (EDA)
+# Visualize class distribution
+plt.figure(figsize=(6, 4))
+sns.countplot(x='Class', data=dataset)
+plt.title('Class Distribution')
+plt.show()
+
+# Step 5: Model Training
+# Split the dataset into features (X) and target variable (y)
+X = dataset.drop('Class', axis=1)  # Assuming 'Class' is the target variable
+y = dataset['Class']
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Standardize the features
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+# Create a Random Forest Classifier
+model = RandomForestClassifier(n_estimators=100, random_state=42)
+
+# Train the model
+model.fit(X_train, y_train)
+
+# Step 6: Model Evaluation
+# Make predictions on the test set
+y_pred = model.predict(X_test)
+
+# Evaluate the model
+print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
+print("\nAccuracy Score:", accuracy_score(y_test, y_pred))
+print("Precision Score:", precision_score(y_test, y_pred))
+print("Recall Score:", recall_score(y_test, y_pred))
+print("F1 Score:", f1_score(y_test, y_pred))
+print("\nClassification Report:\n", classification_report(y_test, y_pred))
